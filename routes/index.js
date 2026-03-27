@@ -23,8 +23,8 @@ router.get('/', function(req, res, next) {
       { label: 'Dinh huong', value: 'Backend-first, product mindset' }
     ],
     contacts: [
-      { label: 'Phone', value: '0379747517', href: 'tel:xxx' },
-      { label: 'Email', value: 'sonkoi46f6@gmail.com', href: 'mailto:xxxx' },
+      { label: 'Phone', value: '', href: 'tel:xxx' },
+      { label: 'Email', value: 's', href: 'mailto:xxxx' },
       { label: 'GitHub', value: 'github.com/soncoderz', href: 'xxxx' }
     ],
  
