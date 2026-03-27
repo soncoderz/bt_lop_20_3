@@ -5,16 +5,16 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
   res.render('index', {
     page: {
-      title: 'Trinh Cong Son | Fullstack Developer Intern',
+      title: 'Trinh Cong Son |  Developer Intern',
       description: 'Portfolio ca nhan cua Trinh Cong Son, tap trung vao backend Node.js, Express.js, MongoDB va xay dung san pham web hoan chinh.'
     },
     profile: {
       name: 'Trinh Cong Son',
-      role: 'Fullstack Developer Intern',
+      role: ' Developer Intern',
       location: 'Thu Duc, Ho Chi Minh City',
       summary: 'Sinh vien Cong nghe thong tin tap trung vao backend Node.js/Express, quan tam den API thuc te, xac thuc bao mat, co so du lieu va quy trinh CI/CD de dua san pham len moi truong deploy that su.',
-      objective: 'Toi dang tim co hoi internship de mo rong ky nang fullstack, dac biet la kha nang xay dung backend on dinh, giao tiep giua frontend va API, va tham gia vao nhung san pham giai quyet bai toan thuc te.',
-      availability: 'San sang tham gia du an thuc tap backend/fullstack va tiep tuc nang cap san pham ca nhan.',
+      objective: 'Toi dang tim co hoi internship de mo rong ky nang , dac biet la kha nang xay dung backend on dinh, giao tiep giua frontend va API, va tham gia vao nhung san pham giai quyet bai toan thuc te.',
+      availability: 'San sang tham gia du an thuc tap backend/ va tiep tuc nang cap san pham ca nhan.',
       initials: 'TS'
     },
     facts: [
@@ -23,36 +23,11 @@ router.get('/', function(req, res, next) {
       { label: 'Dinh huong', value: 'Backend-first, product mindset' }
     ],
     contacts: [
-      { label: 'Phone', value: '0379747517', href: 'tel:0379747517' },
-      { label: 'Email', value: 'sonkoi46f6@gmail.com', href: 'mailto:sonkoi46f6@gmail.com' },
-      { label: 'GitHub', value: 'github.com/soncoderz', href: 'https://github.com/soncoderz' }
+      { label: 'Phone', value: '0379747517', href: 'tel:xxx' },
+      { label: 'Email', value: 'sonkoi46f6@gmail.com', href: 'mailto:xxxx' },
+      { label: 'GitHub', value: 'github.com/soncoderz', href: 'xxxx' }
     ],
-    skills: [
-      {
-        title: 'Languages',
-        items: ['JavaScript', 'TypeScript', 'Java', 'Dart']
-      },
-      {
-        title: 'Frontend',
-        items: ['React.js', 'Tailwind CSS', 'Responsive UI']
-      },
-      {
-        title: 'Backend',
-        items: ['Node.js', 'Express.js', 'REST API', 'JWT Authentication']
-      },
-      {
-        title: 'Database',
-        items: ['MongoDB', 'Mongoose']
-      },
-      {
-        title: 'Tools',
-        items: ['Git', 'GitHub', 'VS Code', 'Postman', 'Railway', 'Vercel', 'Docker']
-      },
-      {
-        title: 'Soft Skills',
-        items: ['Teamwork', 'Communication', 'Problem Solving', 'Continuous Learning']
-      }
-    ],
+ 
     focusAreas: [
       'Xay dung REST API ro rang, de mo rong va de test.',
       'Trien khai JWT auth, role-based access control va validation cho he thong nguoi dung.',
@@ -63,7 +38,7 @@ router.get('/', function(req, res, next) {
         degree: 'Information Technology',
         school: 'HCMC University of Technology',
         period: '2022 - 2026',
-        detail: 'GPA: 3.17 / 4.0'
+        detail: 'GPA: '
       }
     ],
     projects: [
