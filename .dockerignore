@@ -1,3 +1,9 @@
 .git
 .github
+docs
+node_modules
+npm-debug.log*
+scripts
+site
 README.md
+keys/private.pem

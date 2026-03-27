@@ -9,8 +9,6 @@ on:
 jobs:
   docker:
     runs-on: ubuntu-latest
-    env:
-      IMAGE_NAME: ${{ vars.DOCKERHUB_IMAGE || format('{0}/{1}', secrets.DOCKERHUB_USERNAME, github.event.repository.name) }}
 
     permissions:
       contents: read
@@ -19,20 +17,26 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Validate Docker Hub configuration
+      - name: Resolve Docker Hub settings
+        id: dockerhub
         shell: bash
+        env:
+          DOCKERHUB_IMAGE: ${{ vars.DOCKERHUB_IMAGE }}
+          DOCKERHUB_USERNAME_SECRET: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_USERNAME_VAR: ${{ vars.DOCKERHUB_USERNAME }}
+          GITHUB_OWNER: ${{ github.repository_owner }}
+          REPOSITORY_NAME: ${{ github.event.repository.name }}
         run: |
-          if [ -z "${{ secrets.DOCKERHUB_USERNAME }}" ]; then
-            echo "::error::Missing GitHub secret DOCKERHUB_USERNAME"
+          dockerhub_username="${DOCKERHUB_USERNAME_VAR:-$DOCKERHUB_USERNAME_SECRET}"
+
+          if [ -z "$dockerhub_username" ]; then
+            dockerhub_username="$GITHUB_OWNER"
+          fi
+
+          image_name="${DOCKERHUB_IMAGE:-$dockerhub_username/$REPOSITORY_NAME}"
+
+          if [ -z "$image_name" ] || [[ "$image_name" != */* ]] || [[ "$image_name" == /* ]] || [[ "$image_name" == */ ]] || [[ "$image_name" == *"//"* ]]; then
+            echo "::error::Invalid Docker image name '$image_name'. Use namespace/repository, for example soncoderz/bt_lop_20_3."
             exit 1
           fi
 
@@ -41,18 +45,24 @@ jobs:
             exit 1
           fi
 
-          if [[ -z "${IMAGE_NAME}" || "${IMAGE_NAME}" != */* ]]; then
-            echo "::error::Invalid Docker image name '${IMAGE_NAME}'. Use namespace/repository, for example soncoderz/bt_lop_20_3."
-            exit 1
-          fi
+          echo "username=$dockerhub_username" >> "$GITHUB_OUTPUT"
+          echo "image_name=$image_name" >> "$GITHUB_OUTPUT"
+          echo "Publishing image: $image_name"
 
-          echo "Publishing image: ${IMAGE_NAME}"
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ steps.dockerhub.outputs.username }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.IMAGE_NAME }}
+          images: ${{ steps.dockerhub.outputs.image_name }}
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=sha,prefix=sha-

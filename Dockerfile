@@ -1,8 +1,26 @@
-FROM nginx:1.27-alpine
+FROM node:20-alpine
 
-COPY site/ /usr/share/nginx/html/
+WORKDIR /app
 
-EXPOSE 80
+ENV NODE_ENV=production
+ENV PORT=3000
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://127.0.0.1/ || exit 1
+COPY package*.json ./
+
+RUN npm ci --omit=dev
+
+COPY app.js ./
+COPY bin ./bin
+COPY controllers ./controllers
+COPY keys ./keys
+COPY routes ./routes
+COPY schemas ./schemas
+COPY utils ./utils
+COPY views ./views
+
+EXPOSE 3000
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:3000/health || exit 1
+
+CMD ["npm", "start"]
