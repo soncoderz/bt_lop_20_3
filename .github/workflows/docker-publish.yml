@@ -9,6 +9,8 @@ on:
 jobs:
   docker:
     runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: ${{ vars.DOCKERHUB_IMAGE || format('{0}/{1}', secrets.DOCKERHUB_USERNAME, github.event.repository.name) }}
 
     permissions:
       contents: read
@@ -26,11 +28,31 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Validate Docker Hub configuration
+        shell: bash
+        run: |
+          if [ -z "${{ secrets.DOCKERHUB_USERNAME }}" ]; then
+            echo "::error::Missing GitHub secret DOCKERHUB_USERNAME"
+            exit 1
+          fi
+
+          if [ -z "${{ secrets.DOCKERHUB_TOKEN }}" ]; then
+            echo "::error::Missing GitHub secret DOCKERHUB_TOKEN"
+            exit 1
+          fi
+
+          if [[ -z "${IMAGE_NAME}" || "${IMAGE_NAME}" != */* ]]; then
+            echo "::error::Invalid Docker image name '${IMAGE_NAME}'. Use namespace/repository, for example soncoderz/bt_lop_20_3."
+            exit 1
+          fi
+
+          echo "Publishing image: ${IMAGE_NAME}"
+
       - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ vars.DOCKERHUB_IMAGE }}
+          images: ${{ env.IMAGE_NAME }}
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=sha,prefix=sha-

@@ -32,9 +32,21 @@ Vao repo GitHub:
 
 `Settings` > `Secrets and variables` > `Actions` > tab `Variables` > `New repository variable`
 
-Tao variable:
+Tao variable nay neu ban muon dat ten image thu cong:
 
 - `DOCKERHUB_IMAGE`: ten image day du, vi du `soncoderz/bt_lop_20_3`
+
+Neu khong tao `DOCKERHUB_IMAGE`, workflow se tu dong dung:
+
+- `<DOCKERHUB_USERNAME>/<ten-repo-github>`
+
+voi repo nay se thanh:
+
+- `soncoderz/bt_lop_20_3`
+
+## Tao repository tren Docker Hub
+
+Ban nen tao truoc repository tren Docker Hub co ten `bt_lop_20_3` trong namespace cua ban de tranh loi quyen push.
 
 ## Cach hoat dong
 
