@@ -24,13 +24,17 @@ jobs:
           DOCKERHUB_IMAGE: ${{ vars.DOCKERHUB_IMAGE }}
           DOCKERHUB_USERNAME_SECRET: ${{ secrets.DOCKERHUB_USERNAME }}
           DOCKERHUB_USERNAME_VAR: ${{ vars.DOCKERHUB_USERNAME }}
-          GITHUB_OWNER: ${{ github.repository_owner }}
           REPOSITORY_NAME: ${{ github.event.repository.name }}
         run: |
           dockerhub_username="${DOCKERHUB_USERNAME_VAR:-$DOCKERHUB_USERNAME_SECRET}"
 
           if [ -z "$dockerhub_username" ]; then
-            dockerhub_username="$GITHUB_OWNER"
+            dockerhub_username="${GITHUB_REPOSITORY_OWNER:-$GITHUB_ACTOR}"
+          fi
+
+          if [ -z "$dockerhub_username" ]; then
+            echo "::error::Missing Docker Hub username. Set DOCKERHUB_USERNAME as a variable or secret."
+            exit 1
           fi
 
           image_name="${DOCKERHUB_IMAGE:-$dockerhub_username/$REPOSITORY_NAME}"
@@ -45,8 +49,14 @@ jobs:
             exit 1
           fi
 
-          echo "username=$dockerhub_username" >> "$GITHUB_OUTPUT"
-          echo "image_name=$image_name" >> "$GITHUB_OUTPUT"
+          {
+            echo "username<<EOF"
+            echo "$dockerhub_username"
+            echo "EOF"
+            echo "image_name<<EOF"
+            echo "$image_name"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
           echo "Publishing image: $image_name"
 
       - name: Set up Docker Buildx
