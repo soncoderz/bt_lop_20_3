@@ -32,13 +32,16 @@ jobs:
             dockerhub_username="${GITHUB_REPOSITORY_OWNER:-$GITHUB_ACTOR}"
           fi
 
+          dockerhub_username="$(printf '%s' "$dockerhub_username" | tr -d '\r' | xargs)"
+
           if [ -z "$dockerhub_username" ]; then
             echo "::error::Missing Docker Hub username. Set DOCKERHUB_USERNAME as a variable or secret."
             exit 1
           fi
 
+          dockerhub_image="$(printf '%s' "$DOCKERHUB_IMAGE" | tr -d '\r' | xargs)"
           fallback_image_name="$dockerhub_username/$REPOSITORY_NAME"
-          image_name="$(printf '%s' "${DOCKERHUB_IMAGE:-$fallback_image_name}" | tr -d '\r' | xargs)"
+          image_name="${dockerhub_image:-$fallback_image_name}"
 
           if ! [[ "$image_name" =~ ^[a-z0-9]+([._-][a-z0-9]+)*/[a-z0-9]+([._-][a-z0-9]+)*$ ]]; then
             if [ -n "$DOCKERHUB_IMAGE" ]; then
