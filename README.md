@@ -14,7 +14,7 @@ Repository nay da duoc scaffold san de build Docker image va push len Docker Hub
 1. Dang nhap Docker Hub.
 2. Vao `Account Settings` > `Personal access tokens`.
 3. Tao token moi, copy token va luu lai ngay.
-
+1
 ## Tao GitHub Secrets
 
 Vao repo GitHub:
