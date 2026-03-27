@@ -1,2 +1,170 @@
-<h1>{{title}}</h1>
-<p>Node.js application is running.</p>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{page.title}}</title>
+  <meta name="description" content="{{page.description}}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/stylesheets/profile.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <div class="hero__intro">
+        <p class="hero__eyebrow">{{profile.location}} | Backend / Fullstack Portfolio</p>
+        <h1>{{profile.name}}</h1>
+        <p class="hero__role">{{profile.role}}</p>
+        <p class="hero__summary">{{profile.summary}}</p>
+        <div class="hero__actions">
+          <a class="button button--primary" href="https://github.com/soncoderz">Xem GitHub</a>
+          <a class="button button--ghost" href="mailto:sonkoi46f6@gmail.com">Lien he nhanh</a>
+        </div>
+      </div>
+
+      <aside class="hero__spotlight">
+        <div class="avatar-badge" aria-hidden="true">
+          <span>{{profile.initials}}</span>
+        </div>
+        <div class="hero__spotlight-body">
+          <p class="spotlight-label">Current focus</p>
+          <h2>Xay dung san pham web co the deploy thuc te</h2>
+          <p>{{profile.availability}}</p>
+        </div>
+      </aside>
+    </header>
+
+    <main class="content-grid">
+      <aside class="sidebar">
+        <section class="panel">
+          <div class="panel__header">
+            <p class="section-tag">Thong tin</p>
+            <h2>Ho so ca nhan</h2>
+          </div>
+
+          <div class="info-list">
+            {{#each facts}}
+              <div class="info-row">
+                <span class="info-row__label">{{label}}</span>
+                <strong>{{value}}</strong>
+              </div>
+            {{/each}}
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel__header">
+            <p class="section-tag">Lien he</p>
+            <h2>Ket noi</h2>
+          </div>
+
+          <div class="contact-list">
+            {{#each contacts}}
+              <a class="contact-link" href="{{href}}">
+                <span class="contact-link__label">{{label}}</span>
+                <strong>{{value}}</strong>
+              </a>
+            {{/each}}
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel__header">
+            <p class="section-tag">Ky nang</p>
+            <h2>Nang luc chinh</h2>
+          </div>
+
+          <div class="skill-groups">
+            {{#each skills}}
+              <div class="skill-group">
+                <h3>{{title}}</h3>
+                <div class="chip-list">
+                  {{#each items}}
+                    <span class="chip">{{this}}</span>
+                  {{/each}}
+                </div>
+              </div>
+            {{/each}}
+          </div>
+        </section>
+      </aside>
+
+      <section class="mainbar">
+        <section class="panel panel--feature">
+          <div class="panel__header">
+            <p class="section-tag">Objective</p>
+            <h2>Dinh huong nghe nghiep</h2>
+          </div>
+
+          <p class="lead">{{profile.objective}}</p>
+
+          <div class="focus-list">
+            {{#each focusAreas}}
+              <article class="focus-card">
+                <p>{{this}}</p>
+              </article>
+            {{/each}}
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel__header">
+            <p class="section-tag">Education</p>
+            <h2>Hoc van</h2>
+          </div>
+
+          <div class="timeline">
+            {{#each education}}
+              <article class="timeline-item">
+                <div class="timeline-item__meta">
+                  <span>{{period}}</span>
+                </div>
+                <div class="timeline-item__content">
+                  <h3>{{degree}}</h3>
+                  <p class="timeline-item__school">{{school}}</p>
+                  <p>{{detail}}</p>
+                </div>
+              </article>
+            {{/each}}
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel__header">
+            <p class="section-tag">Project</p>
+            <h2>Du an tieu bieu</h2>
+          </div>
+
+          {{#each projects}}
+            <article class="project-card">
+              <div class="project-card__head">
+                <div>
+                  <p class="project-card__role">{{role}}</p>
+                  <h3>{{title}}</h3>
+                </div>
+                <span class="project-card__period">{{period}}</span>
+              </div>
+
+              <p class="project-card__summary">{{summary}}</p>
+
+              <ul class="project-points">
+                {{#each bullets}}
+                  <li>{{this}}</li>
+                {{/each}}
+              </ul>
+
+              <div class="chip-list">
+                {{#each stack}}
+                  <span class="chip chip--accent">{{this}}</span>
+                {{/each}}
+              </div>
+            </article>
+          {{/each}}
+        </section>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

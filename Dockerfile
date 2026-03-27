@@ -13,6 +13,7 @@ COPY app.js ./
 COPY bin ./bin
 COPY controllers ./controllers
 COPY keys ./keys
+COPY public ./public
 COPY routes ./routes
 COPY schemas ./schemas
 COPY utils ./utils
