@@ -37,9 +37,17 @@ jobs:
             exit 1
           fi
 
-          image_name="${DOCKERHUB_IMAGE:-$dockerhub_username/$REPOSITORY_NAME}"
+          fallback_image_name="$dockerhub_username/$REPOSITORY_NAME"
+          image_name="$(printf '%s' "${DOCKERHUB_IMAGE:-$fallback_image_name}" | tr -d '\r' | xargs)"
 
-          if [ -z "$image_name" ] || [[ "$image_name" != */* ]] || [[ "$image_name" == /* ]] || [[ "$image_name" == */ ]] || [[ "$image_name" == *"//"* ]]; then
+          if ! [[ "$image_name" =~ ^[a-z0-9]+([._-][a-z0-9]+)*/[a-z0-9]+([._-][a-z0-9]+)*$ ]]; then
+            if [ -n "$DOCKERHUB_IMAGE" ]; then
+              echo "::warning::Ignoring invalid DOCKERHUB_IMAGE '$image_name'. Falling back to '$fallback_image_name'."
+              image_name="$fallback_image_name"
+            fi
+          fi
+
+          if ! [[ "$image_name" =~ ^[a-z0-9]+([._-][a-z0-9]+)*/[a-z0-9]+([._-][a-z0-9]+)*$ ]]; then
             echo "::error::Invalid Docker image name '$image_name'. Use namespace/repository, for example soncoderz/bt_lop_20_3."
             exit 1
           fi
