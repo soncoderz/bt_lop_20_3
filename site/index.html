@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>bt_lop_20_3</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: linear-gradient(135deg, #0f172a, #1e293b 45%, #334155);
+      --card: rgba(255, 255, 255, 0.92);
+      --text: #0f172a;
+      --accent: #ea580c;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    main {
+      width: min(680px, calc(100% - 32px));
+      padding: 32px;
+      border-radius: 24px;
+      background: var(--card);
+      box-shadow: 0 24px 80px rgba(15, 23, 42, 0.3);
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      font-size: clamp(2rem, 3vw, 3rem);
+    }
+
+    p {
+      margin: 0 0 12px;
+      line-height: 1.6;
+    }
+
+    code {
+      color: var(--accent);
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>CI/CD da san sang</h1>
+    <p>Image Docker cho repo <code>bt_lop_20_3</code> da build thanh cong.</p>
+    <p>Khi ban push len nhanh <code>main</code>, GitHub Actions se tu dong build va push image len Docker Hub.</p>
+  </main>
+</body>
+</html>
