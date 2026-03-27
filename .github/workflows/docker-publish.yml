@@ -1,4 +1,4 @@
-name: Build and Push Docker Image
+name: Build, Push and Deploy Docker Image
 
 on:
   push:
@@ -9,6 +9,10 @@ on:
 jobs:
   docker:
     runs-on: ubuntu-latest
+    env:
+      DEFAULT_DOCKERHUB_USERNAME: soncoderz
+      CONTAINER_PORT: 3000
+      DEPLOY_SLOT: 1
 
     permissions:
       contents: read
@@ -29,7 +33,7 @@ jobs:
           dockerhub_username="${DOCKERHUB_USERNAME_VAR:-$DOCKERHUB_USERNAME_SECRET}"
 
           if [ -z "$dockerhub_username" ]; then
-            dockerhub_username="${GITHUB_REPOSITORY_OWNER:-$GITHUB_ACTOR}"
+            dockerhub_username="${DEFAULT_DOCKERHUB_USERNAME:-${GITHUB_REPOSITORY_OWNER:-$GITHUB_ACTOR}}"
           fi
 
           dockerhub_username="$(printf '%s' "$dockerhub_username" | tr -d '\r' | xargs)"
@@ -96,3 +100,33 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Deploy to DevOps Classroom
+        if: github.ref_type == 'branch' && github.ref_name == github.event.repository.default_branch
+        shell: bash
+        env:
+          DEPLOY_URL: ${{ secrets.DEPLOY_URL }}
+          REPO: ${{ steps.dockerhub.outputs.image_name }}
+        run: |
+          if [ -z "$DEPLOY_URL" ]; then
+            echo "::error::Missing GitHub secret DEPLOY_URL"
+            exit 1
+          fi
+
+          RESPONSE=$(curl -sS -w "\n%{http_code}" -X POST "$DEPLOY_URL?repo=$REPO&tag=latest&slot=$DEPLOY_SLOT&container_port=$CONTAINER_PORT&strict_container_port=0")
+          BODY=$(echo "$RESPONSE" | sed '$d')
+          CODE=$(echo "$RESPONSE" | tail -n1)
+
+          echo "Webhook HTTP: $CODE"
+          if [ "$CODE" -lt 200 ] || [ "$CODE" -ge 300 ]; then
+            echo "Deploy failed. See webhook details below."
+            echo "::group::Webhook JSON details"
+            echo "$BODY" | python3 -m json.tool 2>/dev/null || echo "$BODY"
+            echo "::endgroup::"
+            exit 1
+          fi
+
+          echo "Deploy succeeded."
+          echo "::group::Webhook JSON details"
+          echo "$BODY" | python3 -m json.tool 2>/dev/null || echo "$BODY"
+          echo "::endgroup::"
